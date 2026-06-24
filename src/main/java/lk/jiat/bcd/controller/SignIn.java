@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lk.jiat.bcd.model.User;
 
 import java.io.IOException;
@@ -31,14 +32,19 @@ public class SignIn  extends HttpServlet {
             User user = null;
 
             for (User u : users){
-                if (u.getEmail().equals(email) && user.getPassword().equals(password)){
+                if (u.getEmail().equals(email) && u.getPassword().equals(password)){
                     user = u;
                     break;
                 }
             }
 
             if (user != null){
-                resp.sendRedirect("profile.jsp");
+             HttpSession session = req.getSession();
+             session.setAttribute("email",email);
+             session.setAttribute("name",user.getName());
+             session.setAttribute("mobile",user.getMobile());
+
+                resp.sendRedirect("profile");
             } else{
                 resp.getWriter().write("Invalid email or password");
             }
